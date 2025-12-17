@@ -1,0 +1,25 @@
+service: hospital-email-service
+
+provider:
+  name: aws
+  runtime: python3.11
+  stage: dev
+  region: us-east-1
+  environment:
+    SMTP_HOST: ${env:SMTP_HOST}
+    SMTP_PORT: ${env:SMTP_PORT}
+    SMTP_USER: ${env:SMTP_USER}
+    SMTP_PASSWORD: ${env:SMTP_PASSWORD}
+    FROM_EMAIL: ${env:FROM_EMAIL}
+
+functions:
+  email:
+    handler: handler.handle_email
+    events:
+      - http:
+          path: email
+          method: post
+          cors: true
+
+plugins:
+  - serverless-offline

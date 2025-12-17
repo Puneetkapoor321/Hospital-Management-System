@@ -1,0 +1,219 @@
+{% extends "base.html" %} {% block hero %}
+<div class="hero-section">
+  <div class="app-container section-spacing">
+    <div class="landing-grid">
+      <!-- Left Column: Hero Content -->
+      <div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+          "
+        >
+          <div class="icon-container-large">
+            <i class="fas fa-heartbeat"></i>
+          </div>
+          <h1 class="h1 mb-0">Hospital Management System</h1>
+        </div>
+        <p class="body mb-6" style="font-size: 1.0625rem; line-height: 1.7">
+          Streamline appointments, manage availability, and connect doctors with
+          patients. Easy scheduling, verified doctors, and real-time updates.
+        </p>
+
+        <!-- Feature Bullets -->
+        <div style="display: flex; flex-direction: column; gap: 1.75rem">
+          <div
+            style="display: flex; align-items: start; gap: 1.25rem"
+            class="fade-in feature-item"
+          >
+            <div class="icon-container feature-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div>
+              <h3
+                class="h3"
+                style="
+                  font-size: 1.125rem;
+                  margin-bottom: 0.5rem;
+                  font-weight: 600;
+                  color: hsl(var(--foreground));
+                "
+              >
+                Easy Scheduling
+              </h3>
+              <p class="small" style="line-height: 1.6">
+                Doctors manage availability slots effortlessly with our
+                intuitive interface
+              </p>
+            </div>
+          </div>
+
+          <div
+            style="display: flex; align-items: start; gap: 1.25rem"
+            class="feature-item"
+          >
+            <div
+              class="icon-container feature-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  hsl(var(--accent) / 0.15),
+                  hsl(var(--primary) / 0.15)
+                );
+                color: hsl(var(--accent));
+              "
+            >
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div>
+              <h3
+                class="h3"
+                style="
+                  font-size: 1.125rem;
+                  margin-bottom: 0.5rem;
+                  font-weight: 600;
+                  color: hsl(var(--foreground));
+                "
+              >
+                Verified Doctors
+              </h3>
+              <p class="small" style="line-height: 1.6">
+                Connect with trusted healthcare professionals verified by our
+                system
+              </p>
+            </div>
+          </div>
+
+          <div
+            style="display: flex; align-items: start; gap: 1.25rem"
+            class="feature-item"
+          >
+            <div
+              class="icon-container feature-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  hsl(var(--primary) / 0.15),
+                  hsl(var(--accent) / 0.15)
+                );
+                color: hsl(var(--primary));
+              "
+            >
+              <i class="fas fa-bell"></i>
+            </div>
+            <div>
+              <h3
+                class="h3"
+                style="
+                  font-size: 1.125rem;
+                  margin-bottom: 0.5rem;
+                  font-weight: 600;
+                  color: hsl(var(--foreground));
+                "
+              >
+                Real-time Updates
+              </h3>
+              <p class="small" style="line-height: 1.6">
+                Instant notifications for all bookings and appointment
+                confirmations
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Auth Card (Glassmorphism) -->
+      <div>
+        <div class="card glass auth-card" style="padding: 2.5rem">
+          <div style="text-align: center; margin-bottom: 2rem">
+            <div
+              class="icon-container-large"
+              style="
+                margin: 0 auto 1rem;
+                background: linear-gradient(
+                  135deg,
+                  hsl(var(--primary) / 0.1),
+                  hsl(var(--accent) / 0.1)
+                );
+              "
+            >
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <h2 class="h2 mb-2">Welcome</h2>
+            <p class="small">Sign in or create an account to get started</p>
+          </div>
+
+          <!-- Quick Links -->
+          <div style="display: flex; flex-direction: column; gap: 1rem">
+            <a
+              href="{% url 'accounts:login' %}"
+              class="button button-primary"
+              style="width: 100%; justify-content: center; gap: 0.5rem"
+            >
+              <i class="fas fa-sign-in-alt"></i>
+              Sign In
+            </a>
+            <div style="display: flex; gap: 0.75rem">
+              <a
+                href="{% url 'accounts:doctor_signup' %}"
+                class="button button-outline"
+                style="flex: 1; justify-content: center; gap: 0.5rem"
+              >
+                <i class="fas fa-user-md"></i>
+                Doctor
+              </a>
+              <a
+                href="{% url 'accounts:patient_signup' %}"
+                class="button button-outline"
+                style="flex: 1; justify-content: center; gap: 0.5rem"
+              >
+                <i class="fas fa-user"></i>
+                Patient
+              </a>
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 2rem;
+              padding-top: 2rem;
+              border-top: 1px solid hsl(var(--border));
+            "
+          >
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <i
+                  class="fas fa-shield-alt"
+                  style="color: hsl(var(--primary))"
+                ></i>
+                <span class="small">Secure</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <i class="fas fa-clock" style="color: hsl(var(--primary))"></i>
+                <span class="small">24/7 Access</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <i
+                  class="fas fa-mobile-alt"
+                  style="color: hsl(var(--primary))"
+                ></i>
+                <span class="small">Mobile Ready</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block content %} {% endblock %}

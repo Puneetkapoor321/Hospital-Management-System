@@ -1,0 +1,64 @@
+{% extends "base.html" %} 
+{% block content %}
+<div class="section-spacing">
+  <div class="app-container">
+    <div style="margin-bottom: 2rem;">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <div class="icon-container" style="background: hsl(var(--primary) / 0.1);">
+          <i class="fas fa-user-md"></i>
+        </div>
+        <h1 class="h1 mb-0">Available Doctors</h1>
+      </div>
+      <p class="small" style="color: hsl(var(--muted-foreground));">Select a doctor to view their available appointment slots</p>
+    </div>
+
+    {% if doctors %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+      {% for d in doctors %}
+      <div class="card card-interactive fade-in" style="padding: 1.75rem;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div class="avatar avatar-large" style="margin: 0 auto; background: linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.2));">
+            <i class="fas fa-user-md"></i>
+          </div>
+        </div>
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <i class="fas fa-stethoscope" style="color: hsl(var(--primary)); font-size: 0.875rem;"></i>
+            Dr. {{ d.get_full_name|default:d.username }}
+          </h3>
+          {% if d.doctor_profile.specialization %}
+          <p class="label" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <i class="fas fa-certificate" style="color: hsl(var(--accent));"></i>
+            {{ d.doctor_profile.specialization }}
+          </p>
+          {% endif %}
+          <p class="small" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: hsl(var(--muted-foreground));">
+            <i class="far fa-envelope"></i>
+            {{ d.email }}
+          </p>
+        </div>
+        <div>
+          <a
+            href="{% url 'bookings:doctor_slots' d.pk %}"
+            class="button button-primary"
+            style="width: 100%; justify-content: center; gap: 0.5rem;"
+          >
+            <i class="fas fa-calendar-check"></i>
+            View Available Slots
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="icon-container-large" style="margin: 0 auto 1rem; background: hsl(var(--muted)); color: hsl(var(--muted-foreground));">
+        <i class="fas fa-user-md"></i>
+      </div>
+      <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem;">No doctors available</h3>
+      <p class="small" style="color: hsl(var(--muted-foreground));">There are currently no doctors registered in the system.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

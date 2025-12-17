@@ -1,0 +1,144 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="dashboard-header">
+  <div class="app-container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <div class="icon-container" style="background: hsl(var(--accent) / 0.1); color: hsl(var(--accent));">
+          <i class="fas fa-user-injured"></i>
+        </div>
+        <h1 class="h1" style="margin-bottom: 0;">Patient Dashboard</h1>
+      </div>
+      <p class="small" style="display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-user-circle"></i>
+        Welcome, {{ user.get_full_name|default:user.username }}
+      </p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <a href="{% url 'bookings:doctor_list' %}" class="button button-primary">
+        <i class="fas fa-calendar-plus" style="margin-right: 0.5rem;"></i>
+        Book Appointment
+      </a>
+      <a href="{% url 'accounts:logout' %}" class="button button-outline">
+        <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>
+        Logout
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="app-container" style="padding-top: 2rem; padding-bottom: 2rem;">
+  <div class="dashboard-grid-patient">
+    <!-- Available Doctors - col-span-2 -->
+    <div class="col-span-2">
+      <div class="card" style="padding: 1.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <div class="icon-container" style="background: hsl(var(--primary) / 0.1);">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <h3 class="h3 mb-0">Available Doctors</h3>
+        </div>
+        {% if doctors %}
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          {% for doctor in doctors %}
+          <div class="card card-interactive fade-in" style="padding: 1.5rem;">
+            <div style="display: flex; align-items: start; gap: 1rem; margin-bottom: 1rem;">
+              <div class="avatar avatar-large" style="background: linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.2));">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <div style="flex: 1;">
+                <p style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="fas fa-stethoscope" style="color: hsl(var(--primary)); font-size: 0.875rem;"></i>
+                  Dr. {{ doctor.get_full_name|default:doctor.username }}
+                </p>
+                {% if doctor.doctor_profile.specialization %}
+                <p class="label" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                  <i class="fas fa-certificate" style="color: hsl(var(--accent));"></i>
+                  {{ doctor.doctor_profile.specialization }}
+                </p>
+                {% endif %}
+                <p class="small" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                  <i class="far fa-envelope"></i>
+                  {{ doctor.email }}
+                </p>
+              </div>
+            </div>
+            
+            <div style="margin-top: 1rem;">
+              <a href="{% url 'bookings:doctor_slots' doctor.pk %}" class="button button-primary" style="width: 100%; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-calendar-check"></i>
+                View Available Slots
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 3rem 1rem;">
+          <div class="icon-container-large" style="margin: 0 auto 1rem; background: hsl(var(--muted)); color: hsl(var(--muted-foreground));">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <p class="small" style="color: hsl(var(--muted-foreground));">No doctors available at this time.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- My Appointments - col-span-1, sticky -->
+    <div class="col-span-1">
+      <div class="card sticky-sidebar" style="padding: 1.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <div class="icon-container" style="background: hsl(var(--accent) / 0.1); color: hsl(var(--accent));">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <h3 class="h3 mb-0">My Appointments</h3>
+        </div>
+        {% if bookings %}
+        <div style="max-height: 600px; overflow-y: auto;">
+          {% for booking in bookings %}
+          <div style="padding: 1.25rem; border-bottom: 1px solid hsl(var(--border));" class="appointment-card">
+            <div style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div class="icon-container" style="background: hsl(var(--primary) / 0.1); width: 2rem; height: 2rem;">
+                <i class="fas fa-user-md" style="font-size: 0.875rem;"></i>
+              </div>
+              <div style="flex: 1;">
+                <p style="font-weight: 600; margin-bottom: 0.25rem;">
+                  Dr. {{ booking.doctor.get_full_name|default:booking.doctor.username }}
+                </p>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem;">
+              <p class="small" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="far fa-calendar" style="color: hsl(var(--primary));"></i>
+                {{ booking.slot.date }}
+              </p>
+              <p class="small" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="far fa-clock" style="color: hsl(var(--muted-foreground));"></i>
+                {{ booking.slot.start_time }} - {{ booking.slot.end_time }}
+              </p>
+            </div>
+            <span class="badge badge-success" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+              <i class="fas fa-check-circle"></i>
+              Confirmed
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 2rem 1rem;">
+          <div class="icon-container-large" style="margin: 0 auto 1rem; background: hsl(var(--muted)); color: hsl(var(--muted-foreground));">
+            <i class="fas fa-calendar-times"></i>
+          </div>
+          <p class="small" style="color: hsl(var(--muted-foreground)); margin-bottom: 1rem;">No appointments yet.</p>
+          <a href="{% url 'bookings:doctor_list' %}" class="button button-primary" style="width: 100%; justify-content: center; gap: 0.5rem;">
+            <i class="fas fa-calendar-plus"></i>
+            Book One Now
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

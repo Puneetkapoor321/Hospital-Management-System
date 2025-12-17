@@ -1,0 +1,77 @@
+{% extends "base.html" %} 
+{% block content %}
+<div class="section-spacing">
+  <div class="app-container">
+    <div style="max-width: 36rem; margin: 0 auto;">
+      <div style="margin-bottom: 2rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+          <div class="icon-container" style="background: hsl(var(--primary) / 0.1);">
+            <i class="fas fa-calendar-plus"></i>
+          </div>
+          <h1 class="h1 mb-0">
+            {% if form.instance.pk %}Edit{% else %}Create{% endif %} Availability Slot
+          </h1>
+        </div>
+        <p class="small" style="color: hsl(var(--muted-foreground));">Set your available time for appointments</p>
+      </div>
+
+      <div class="card" style="padding: 2rem;">
+        <form method="post">
+          {% csrf_token %} 
+          {% if form.non_field_errors %}
+          <div class="notification notification-error" style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <i class="fas fa-exclamation-circle"></i>
+            <div>{{ form.non_field_errors }}</div>
+          </div>
+          {% endif %} 
+          
+          {% for field in form %}
+          <div class="field" style="margin-top: 1.25rem;">
+            <label class="label-text" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+              {% if field.name == 'date' %}
+                <i class="fas fa-calendar" style="color: hsl(var(--primary));"></i>
+              {% elif 'time' in field.name %}
+                <i class="fas fa-clock" style="color: hsl(var(--primary));"></i>
+              {% else %}
+                <i class="fas fa-edit" style="color: hsl(var(--primary));"></i>
+              {% endif %}
+              {{ field.label }}
+            </label>
+            <div class="control">
+              {{ field }}
+            </div>
+            {% if field.errors %}
+            <p style="color: hsl(var(--destructive)); font-size: 0.875rem; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ field.errors|striptags }}
+            </p>
+            {% endif %} 
+            {% if field.help_text %}
+            <p class="small" style="margin-top: 0.5rem; color: hsl(var(--muted-foreground)); display: flex; align-items: start; gap: 0.5rem;">
+              <i class="fas fa-info-circle" style="margin-top: 0.125rem;"></i>
+              {{ field.help_text }}
+            </p>
+            {% endif %}
+          </div>
+          {% endfor %}
+
+          <div style="display: flex; gap: 0.75rem; margin-top: 2rem;">
+            <button class="button button-primary" type="submit" style="flex: 1; justify-content: center; gap: 0.5rem;">
+              <i class="fas fa-save"></i>
+              Save Slot
+            </button>
+            <a
+              href="{% url 'doctors:availability_list' %}"
+              class="button button-outline"
+              style="flex: 1; justify-content: center; gap: 0.5rem;"
+            >
+              <i class="fas fa-times"></i>
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %} 
+{% block content %}
+<div class="section-spacing">
+  <div class="app-container">
+    <div style="max-width: 36rem; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div class="icon-container-large" style="margin: 0 auto 1.5rem; background: linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.2)); color: hsl(var(--primary));">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h1 class="h1 mb-2">Booking Confirmed!</h1>
+        <p class="body" style="color: hsl(var(--muted-foreground));">
+          Your appointment has been successfully booked.
+        </p>
+      </div>
+
+      <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+        <div class="notification notification-success" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <i class="fas fa-check-circle"></i>
+          <strong>Appointment Details</strong>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: hsl(var(--muted) / 0.3); border-radius: 0.5rem;">
+            <div class="icon-container" style="background: hsl(var(--primary) / 0.1); width: 2.5rem; height: 2.5rem;">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div>
+              <p class="label" style="margin-bottom: 0.25rem;">Doctor</p>
+              <p style="font-weight: 600;">Dr. {{ booking.doctor.get_full_name|default:booking.doctor.username }}</p>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: hsl(var(--muted) / 0.3); border-radius: 0.5rem;">
+            <div class="icon-container" style="background: hsl(var(--accent) / 0.1); color: hsl(var(--accent)); width: 2.5rem; height: 2.5rem;">
+              <i class="far fa-calendar"></i>
+            </div>
+            <div>
+              <p class="label" style="margin-bottom: 0.25rem;">Date</p>
+              <p style="font-weight: 600;">{{ booking.slot.date }}</p>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: hsl(var(--muted) / 0.3); border-radius: 0.5rem;">
+            <div class="icon-container" style="background: hsl(var(--primary) / 0.1); width: 2.5rem; height: 2.5rem;">
+              <i class="far fa-clock"></i>
+            </div>
+            <div>
+              <p class="label" style="margin-bottom: 0.25rem;">Time</p>
+              <p style="font-weight: 600;">{{ booking.slot.start_time }} – {{ booking.slot.end_time }}</p>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: hsl(var(--muted) / 0.3); border-radius: 0.5rem;">
+            <div class="icon-container" style="background: hsl(var(--accent) / 0.1); color: hsl(var(--accent)); width: 2.5rem; height: 2.5rem;">
+              <i class="fas fa-user-injured"></i>
+            </div>
+            <div>
+              <p class="label" style="margin-bottom: 0.25rem;">Patient</p>
+              <p style="font-weight: 600;">{{ booking.patient.get_full_name|default:booking.patient.username }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="notification notification-info" style="display: flex; align-items: start; gap: 0.75rem; margin-top: 1.5rem;">
+          <i class="fas fa-envelope"></i>
+          <div>
+            <strong>Confirmation Email Sent</strong>
+            <p class="small" style="margin-top: 0.25rem; margin-bottom: 0;">A confirmation email has been sent to your registered email address.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <a
+          href="{% url 'bookings:doctor_list' %}"
+          class="button button-primary"
+          style="width: 100%; justify-content: center; gap: 0.5rem;"
+        >
+          <i class="fas fa-calendar-plus"></i>
+          Book Another Appointment
+        </a>
+        <a
+          href="{% url 'accounts:dashboard' %}"
+          class="button button-outline"
+          style="width: 100%; justify-content: center; gap: 0.5rem;"
+        >
+          <i class="fas fa-home"></i>
+          Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

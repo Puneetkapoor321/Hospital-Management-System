@@ -1,0 +1,90 @@
+{% extends "base.html" %} 
+{% block content %}
+<div class="section-spacing">
+  <div class="app-container">
+    <div style="margin-bottom: 2rem;">
+      <a href="{% url 'bookings:doctor_list' %}" class="button button-outline" style="margin-bottom: 1.5rem; gap: 0.5rem;">
+        <i class="fas fa-arrow-left"></i>
+        Back to Doctors
+      </a>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <div class="icon-container" style="background: hsl(var(--primary) / 0.1);">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <h1 class="h1 mb-0">Available Slots</h1>
+      </div>
+      <p class="small" style="color: hsl(var(--muted-foreground));">
+        <i class="fas fa-user-md" style="margin-right: 0.5rem;"></i>
+        Dr. {{ doctor.get_full_name|default:doctor.username }}
+      </p>
+    </div>
+
+    {% if slots %}
+    <div class="card" style="padding: 1.75rem;">
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><i class="fas fa-calendar" style="margin-right: 0.5rem;"></i>Date</th>
+              <th><i class="fas fa-clock" style="margin-right: 0.5rem;"></i>Start Time</th>
+              <th><i class="fas fa-clock" style="margin-right: 0.5rem;"></i>End Time</th>
+              <th><i class="fas fa-cog" style="margin-right: 0.5rem;"></i>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in slots %}
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="far fa-calendar" style="color: hsl(var(--primary));"></i>
+                  <strong>{{ s.date }}</strong>
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="far fa-clock" style="color: hsl(var(--muted-foreground));"></i>
+                  {{ s.start_time }}
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="far fa-clock" style="color: hsl(var(--muted-foreground));"></i>
+                  {{ s.end_time }}
+                </div>
+              </td>
+              <td>
+                <a
+                  class="button button-primary"
+                  href="{% url 'bookings:book_slot' s.pk %}"
+                  style="gap: 0.5rem;"
+                >
+                  <i class="fas fa-calendar-plus"></i>
+                  Book Now
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% else %}
+    <div class="card" style="padding: 3rem;">
+      <div class="empty-state">
+        <div class="icon-container-large" style="margin: 0 auto 1rem; background: hsl(var(--muted)); color: hsl(var(--muted-foreground));">
+          <i class="fas fa-calendar-times"></i>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem;">No available slots</h3>
+        <p class="small" style="color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem;">
+          This doctor doesn't have any available slots at the moment.
+        </p>
+        <a href="{% url 'bookings:doctor_list' %}" class="button button-primary" style="gap: 0.5rem;">
+          <i class="fas fa-arrow-left"></i>
+          View Other Doctors
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

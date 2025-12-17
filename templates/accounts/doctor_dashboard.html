@@ -1,0 +1,182 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="dashboard-header">
+  <div class="app-container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <div class="icon-container" style="background: hsl(var(--primary) / 0.1);">
+          <i class="fas fa-user-md"></i>
+        </div>
+        <h1 class="h1" style="margin-bottom: 0;">Doctor Dashboard</h1>
+      </div>
+      <p class="small" style="display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-user-circle"></i>
+        Welcome, Dr. {{ user.get_full_name|default:user.username }}
+      </p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <a href="{% url 'accounts:logout' %}" class="button button-outline">
+        <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>
+        Logout
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="app-container" style="padding-top: 2rem; padding-bottom: 2rem;">
+  <div class="dashboard-grid-doctor">
+    <!-- Add Availability - col-span-5 -->
+    <div class="col-span-5">
+      <div class="card card-interactive" style="padding: 1.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <div class="icon-container" style="background: hsl(var(--primary) / 0.1);">
+            <i class="fas fa-calendar-plus"></i>
+          </div>
+          <h3 class="h3 mb-0">Add Availability</h3>
+        </div>
+        <a href="{% url 'doctors:availability_create' %}" class="button button-primary" style="width: 100%; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+          <i class="fas fa-plus-circle"></i>
+          Add New Time Slot
+        </a>
+        <div style="padding: 1rem; background: hsl(var(--muted) / 0.5); border-radius: 0.5rem;">
+          <p class="small" style="display: flex; align-items: start; gap: 0.5rem; margin: 0;">
+            <i class="fas fa-info-circle" style="color: hsl(var(--primary)); margin-top: 0.125rem;"></i>
+            <span>Set your date and time range to make slots available for patients to book.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Your Availability - col-span-7 -->
+    <div class="col-span-7">
+      <div class="card" style="padding: 1.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <div class="icon-container" style="background: hsl(var(--accent) / 0.1); color: hsl(var(--accent));">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <h3 class="h3 mb-0">Your Availability</h3>
+        </div>
+        {% if slots %}
+        <div style="max-height: 400px; overflow-y: auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th><i class="fas fa-calendar" style="margin-right: 0.5rem;"></i>Date</th>
+                <th><i class="fas fa-clock" style="margin-right: 0.5rem;"></i>Time</th>
+                <th><i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>Status</th>
+                <th><i class="fas fa-cog" style="margin-right: 0.5rem;"></i>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for slot in slots %}
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-calendar-day" style="color: hsl(var(--primary));"></i>
+                    <strong>{{ slot.date }}</strong>
+                  </div>
+                </td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="far fa-clock" style="color: hsl(var(--muted-foreground));"></i>
+                    <span>{{ slot.start_time }} - {{ slot.end_time }}</span>
+                  </div>
+                </td>
+                <td>
+                  {% if slot.is_booked %}
+                  <span class="badge badge-accent">
+                    <i class="fas fa-check-circle" style="margin-right: 0.25rem;"></i>
+                    Booked
+                  </span>
+                  {% else %}
+                  <span class="badge badge-success">
+                    <i class="fas fa-circle" style="margin-right: 0.25rem; font-size: 0.5rem;"></i>
+                    Available
+                  </span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if not slot.is_booked %}
+                  <form method="post" action="{% url 'doctors:availability_delete' slot.pk %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-ghost" style="color: hsl(var(--destructive)); padding: 0.375rem 0.75rem; gap: 0.375rem;">
+                      <i class="fas fa-trash-alt"></i>
+                      Delete
+                    </button>
+                  </form>
+                  {% else %}
+                  <span class="small" style="color: hsl(var(--muted-foreground));">
+                    <i class="fas fa-lock"></i>
+                    Locked
+                  </span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 3rem 1rem;">
+          <div class="icon-container-large" style="margin: 0 auto 1rem; background: hsl(var(--muted)); color: hsl(var(--muted-foreground));">
+            <i class="fas fa-calendar-times"></i>
+          </div>
+          <p class="small" style="color: hsl(var(--muted-foreground));">No availability slots yet. Add one using the form on the left.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Upcoming Appointments - col-span-12 -->
+    <div class="col-span-12">
+      <div class="card" style="padding: 1.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <div class="icon-container" style="background: hsl(var(--primary) / 0.1);">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <h3 class="h3 mb-0">Upcoming Appointments</h3>
+        </div>
+        {% if bookings %}
+        <div>
+          {% for booking in bookings %}
+          <div style="display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem; border-bottom: 1px solid hsl(var(--border));" class="fade-in appointment-item">
+            <div class="avatar avatar-large">
+              <i class="fas fa-user"></i>
+            </div>
+            <div style="flex: 1;">
+              <p style="font-weight: 600; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-user-injured" style="color: hsl(var(--primary));"></i>
+                {{ booking.patient.get_full_name|default:booking.patient.username }}
+              </p>
+              <p class="label" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-tag"></i>
+                Patient
+              </p>
+            </div>
+            <div style="text-align: right;">
+              <p style="font-weight: 500; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end;">
+                <i class="far fa-calendar" style="color: hsl(var(--primary));"></i>
+                {{ booking.slot.date }}
+              </p>
+              <p class="small" style="display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end;">
+                <i class="far fa-clock"></i>
+                {{ booking.slot.start_time }} - {{ booking.slot.end_time }}
+              </p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 3rem 1rem;">
+          <div class="icon-container-large" style="margin: 0 auto 1rem; background: hsl(var(--muted)); color: hsl(var(--muted-foreground));">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <p class="small" style="color: hsl(var(--muted-foreground));">No upcoming appointments.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
